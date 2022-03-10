@@ -1,24 +1,42 @@
 const express = require("express");
-const app = express();
+const { MongoClient, ObjectId } = require("mongodb");
 
-// Sinaliza para o express entender o JSON no corpo das requisições
-app.use(express.json());
+const url = "mongodb://localhost:27017";
+const dbName = "ocean_bancodados_10_03_2022";
 
-// Endpoint principal
-app.get("/", function (req, res) {
+async function main() {
+  // Conexão com o bando de dados
+
+  console.log("Conectando ao banco de dados...");
+
+  const client = await MongoClient.connect(url);
+
+  const db = client.db(dbName);
+
+  const collection = db.collection("herois");
+
+  console.log("Conexão com o banco de dados realizada com sucesso.");
+
+  const app = express();
+
+  // Sinaliza para o express entender o JSON no corpo das requisições
+  app.use(express.json());
+
+  // Endpoint principal
+  app.get("/", function (req, res) {
     res.send("Hello World");
-});
+  });
 
-const herois = ["Mulher Maravilha", "Capitã Marvel", "Homem de Ferro"];
-//              0                    1                2
+  const herois = ["Mulher Maravilha", "Capitã Marvel", "Homem de Ferro"];
+  //              0                    1                2
 
-// [GET] Read All (Ler individualmente)
-app.get("/herois", function (req, res) {
+  // [GET] Read All (Ler individualmente)
+  app.get("/herois", function (req, res) {
     res.send(herois.filter(Boolean));
-});
+  });
 
-// [GET] Read Single (by Id) (Ler individualmente pelo ID)
-app.get("/herois/:id", function (req, res) {
+  // [GET] Read Single (by Id) (Ler individualmente pelo ID)
+  app.get("/herois/:id", function (req, res) {
     // Acesso o parâmetro da rota chamado ID
     const id = req.params.id - 1;
 
@@ -26,10 +44,10 @@ app.get("/herois/:id", function (req, res) {
     const item = herois[id];
 
     res.send(item);
-});
+  });
 
-// [POST] Create (Criar)
-app.post("/herois", function (req, res) {
+  // [POST] Create (Criar)
+  app.post("/herois", function (req, res) {
     // Recebemos o item no corpo da requisição
     const item = req.body.nome;
 
@@ -38,10 +56,10 @@ app.post("/herois", function (req, res) {
 
     // Enviamos uma resposta de sucesso
     res.send("Item adicionado com sucesso!");
-});
+  });
 
-// [PUT] Update (Atualizar)
-app.put("/herois/:id", function (req, res) {
+  // [PUT] Update (Atualizar)
+  app.put("/herois/:id", function (req, res) {
     // Recebemos o ID que será atualizado
     const id = req.params.id - 1;
 
@@ -53,10 +71,10 @@ app.put("/herois/:id", function (req, res) {
 
     // Enviamos uma mensagem de sucesso
     res.send("Item atualizado com sucesso!");
-});
+  });
 
-// [DELETE] Delete (Remover)
-app.delete("/herois/:id", function (req, res) {
+  // [DELETE] Delete (Remover)
+  app.delete("/herois/:id", function (req, res) {
     // Recebemos o ID que será excluído
     const id = req.params.id - 1;
 
@@ -65,6 +83,9 @@ app.delete("/herois/:id", function (req, res) {
 
     // Enviamos uma mensagem de sucesso
     res.send("Item removido com sucesso!");
-});
+  });
 
-app.listen(3000);
+  app.listen(3000);
+}
+
+main();
