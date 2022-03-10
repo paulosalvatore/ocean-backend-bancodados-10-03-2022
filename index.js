@@ -81,12 +81,12 @@ async function main() {
   });
 
   // [DELETE] Delete (Remover)
-  app.delete("/herois/:id", function (req, res) {
+  app.delete("/herois/:id", async function (req, res) {
     // Recebemos o ID que será excluído
-    const id = req.params.id - 1;
+    const id = req.params.id;
 
-    // Excluimos o ID da lista
-    delete herois[id];
+    // Excluimos o ID do banco
+    await collection.deleteOne({ _id: ObjectId(id) });
 
     // Enviamos uma mensagem de sucesso
     res.send("Item removido com sucesso!");
