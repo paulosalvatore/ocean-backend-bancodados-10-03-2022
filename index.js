@@ -38,12 +38,12 @@ async function main() {
   });
 
   // [GET] Read Single (by Id) (Ler individualmente pelo ID)
-  app.get("/herois/:id", function (req, res) {
+  app.get("/herois/:id", async function (req, res) {
     // Acesso o parâmetro da rota chamado ID
-    const id = req.params.id - 1;
+    const id = req.params.id;
 
     // Pega o item da lista que corresponde a esse ID
-    const item = herois[id];
+    const item = await collection.findOne({ _id: new ObjectId(id) });
 
     res.send(item);
   });
