@@ -49,15 +49,15 @@ async function main() {
   });
 
   // [POST] Create (Criar)
-  app.post("/herois", function (req, res) {
+  app.post("/herois", async function (req, res) {
     // Recebemos o item no corpo da requisição
-    const item = req.body.nome;
+    const item = req.body;
 
-    // Adicionamos o item na lista
-    herois.push(item);
+    // Adicionamos o item no banco
+    await collection.insertOne(item);
 
     // Enviamos uma resposta de sucesso
-    res.send("Item adicionado com sucesso!");
+    res.send(item);
   });
 
   // [PUT] Update (Atualizar)
