@@ -31,8 +31,10 @@ async function main() {
   //              0                    1                2
 
   // [GET] Read All (Ler individualmente)
-  app.get("/herois", function (req, res) {
-    res.send(herois.filter(Boolean));
+  app.get("/herois", async function (req, res) {
+    const documentos = await collection.find().toArray();
+
+    res.send(documentos);
   });
 
   // [GET] Read Single (by Id) (Ler individualmente pelo ID)
