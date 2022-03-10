@@ -63,16 +63,21 @@ async function main() {
   // [PUT] Update (Atualizar)
   app.put("/herois/:id", function (req, res) {
     // Recebemos o ID que será atualizado
-    const id = req.params.id - 1;
+    const id = req.params.id;
 
     // Pegamos o novo item que foi enviado no corpo da requisição
-    const novoItem = req.body.nome;
+    const novoItem = req.body;
 
-    // Atualizamos a lista atual com a nova informação
-    herois[id] = novoItem;
+    // Atualizamos o banco de dados com a nova informação
+    collection.updateOne(
+      { _id: ObjectId(id) },
+      {
+        $set: novoItem,
+      }
+    );
 
     // Enviamos uma mensagem de sucesso
-    res.send("Item atualizado com sucesso!");
+    res.send(novoItem);
   });
 
   // [DELETE] Delete (Remover)
